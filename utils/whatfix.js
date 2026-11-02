@@ -15,9 +15,9 @@ export const TOOLTIP_NEXT_SELECTOR = "#wfx-tooltip-next";
 const sessionPath = path.resolve(__dirname, "../storage/login.json");
 const reportsDir = path.resolve(__dirname, "../reports");
 
-// Builds a Coupa URL from the origin of BULLHORN_LOGIN_URL in .env
+// Builds a Coupa URL from the origin of COUPA_LOGIN_URL in .env
 export function coupaUrl(pathAndHash = "/user/home") {
-  return new URL(process.env.BULLHORN_LOGIN_URL).origin + pathAndHash;
+  return new URL(process.env.COUPA_LOGIN_URL).origin + pathAndHash;
 }
 
 // Saves the browser session to storage/login.json, keeping only Coupa data
@@ -37,11 +37,11 @@ export async function loginIfNeeded(page, context, returnUrl, log) {
   await page
     .locator('#user_login, input[name="user[login]"], #type_User_login')
     .first()
-    .fill(process.env.BULLHORN_USERNAME);
+    .fill(process.env.COUPA_USERNAME);
   await page
     .locator('#user_password, input[name="user[password]"], #type_User_password')
     .first()
-    .fill(process.env.BULLHORN_PASSWORD);
+    .fill(process.env.COUPA_PASSWORD);
   await page
     .locator('button[type="submit"], input[type="submit"], #login_button')
     .first()

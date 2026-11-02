@@ -16,9 +16,9 @@ dotenv.config();
   let context, page;
 
   try {
-    const username = process.env.BULLHORN_USERNAME;
-    const password = process.env.BULLHORN_PASSWORD;
-    const loginUrl = process.env.BULLHORN_LOGIN_URL;
+    const username = process.env.COUPA_USERNAME;
+    const password = process.env.COUPA_PASSWORD;
+    const loginUrl = process.env.COUPA_LOGIN_URL;
 
     context = await launchBrowserWithExtension();
     page = context.pages()[0] || (await context.newPage());

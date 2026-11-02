@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      BULLHORN_LOGIN_URL: ${{ secrets.BULLHORN_LOGIN_URL }}
-      BULLHORN_USERNAME: ${{ secrets.BULLHORN_USERNAME }}
-      BULLHORN_PASSWORD: ${{ secrets.BULLHORN_PASSWORD }}
+      COUPA_LOGIN_URL: ${{ secrets.COUPA_LOGIN_URL }}
+      COUPA_USERNAME: ${{ secrets.COUPA_USERNAME }}
+      COUPA_PASSWORD: ${{ secrets.COUPA_PASSWORD }}
     steps:
       - uses: actions/checkout@v4
 
