@@ -2,8 +2,8 @@ name: Scheduled Coupa Whatfix tests
 
 on:
   schedule:
-    # Weekdays at 03:30 UTC (09:00 IST). GitHub cron is always UTC.
-    - cron: "30 3 * * 1-5"
+    # 3rd of every month at 10:00 AM IST (04:30 UTC). GitHub cron is always UTC.
+    - cron: "30 4 3 * *"
   workflow_dispatch: # lets you run it by hand from the Actions tab
 
 jobs:
@@ -48,3 +48,23 @@ jobs:
             logs/
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Email the result
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: Abhigyan Nath <abhigyan.nath@whatfix.com>
+          to: na_sc@whatfix.com
+          subject: "Coupa Whatfix tests: ${{ job.status }} (${{ github.run_number }})"
+          body: |
+            The scheduled Coupa Whatfix test run finished with status: ${{ job.status }}.
+
+            Run details and downloadable reports:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          attachments: reports/dashboard.html
+          ignore_cert: false
