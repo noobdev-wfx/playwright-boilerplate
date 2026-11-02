@@ -1,0 +1,29 @@
+{
+  "name": "wfx_automation",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "getExtension": "node install-extension.js",
+    "login": "node loginConfig/loginGenerator.js",
+    "testAll": "node runAllTests.js", 
+    "testFull": "npm run getExtension && npm run login && npm run testAll" ,
+    "flow": "node tests/Flows/WelcomeTourFlow.js",
+    "writeRequest": "node tests/Popup/WriteRequestPopup.js",
+    "flowsById": "node tests/Flows/FlowsById.js",
+    "beacons": "node tests/Beacons/Beacons.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "fs-extra": "^11.3.0",
+    "playwright": "^1.53.1",
+    "unzipper": "^0.12.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}

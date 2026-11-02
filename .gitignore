@@ -1,0 +1,75 @@
+# -----------------------
+# Node artifacts
+# -----------------------
+node_modules/
+dist/
+
+# -----------------------
+# Compiled files
+# -----------------------
+*.class
+*.py[cod]
+*.jar
+*.war
+target/
+dist/
+
+# -----------------------
+# Logs
+# -----------------------
+*.log
+logs/.gitkeep   # keep folder structure
+
+# -----------------------
+# IDE & OS files
+# -----------------------
+.idea/
+.DS_Store
+Thumbs.db
+
+# -----------------------
+# Unit test reports
+# -----------------------
+TEST*.xml
+
+# -----------------------
+# Applications / binaries
+# -----------------------
+*.app
+*.exe
+
+# -----------------------
+# Media / large files
+# -----------------------
+*.mp4
+*.webm
+*.avi
+*.mov
+*.flv
+*.wmv
+*.tiff
+
+# -----------------------
+# Reports folder HTML
+# -----------------------
+reports/*.html
+reports/*.png
+reports/*.json
+reports/.gitkeep  # keep folder structure
+
+# -----------------------
+# Secrets and live session data
+# -----------------------
+.env
+storage/login.json
+
+# -----------------------
+# Specific folder and file to ignore
+# -----------------------
+# Use relative paths from repo root
+whatfix-extension/
+latest-extension.zip
+tmp-extract/
+
+# Ignore tmp-user folder inside loginConfig
+loginConfig/tmp-user/
