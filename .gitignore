@@ -73,3 +73,6 @@ tmp-extract/
 
 # Ignore tmp-user folder inside loginConfig
 loginConfig/tmp-user/
+
+# Generated report site
+site/

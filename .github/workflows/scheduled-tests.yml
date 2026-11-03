@@ -49,8 +49,24 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Email the result
+      - name: Build the report site
         if: always()
+        run: node scripts/build-report-site.mjs site
+
+      - name: Upload the report site
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: report-site
+          path: site/
+          if-no-files-found: warn
+          retention-days: 30
+
+      # Email is switched off while the workflow is being tested, so test runs
+      # don't mail na_sc@whatfix.com. To turn it back on, change the next line
+      # to: if: always()
+      - name: Email the result
+        if: false
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
