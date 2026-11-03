@@ -306,6 +306,28 @@ async function describeStep(page, log, stepNo, screenshotName) {
   }
 }
 
+// Clicks the tooltip's Next button. The data-wfx-step tag can vanish when Whatfix
+// re-renders the tooltip (more often on slower machines), so re-tag it before
+// every attempt instead of waiting on a stale marker.
+async function clickNext(page, requireCounter) {
+  let lastErr;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const step = await findStepTooltip(page, requireCounter);
+    if (step?.hasNext) {
+      const nextBtn = page.locator('[data-wfx-step="next"]');
+      try {
+        await highlight(page, nextBtn);
+        await nextBtn.click({ timeout: 5000 }).catch(() => nextBtn.click({ force: true, timeout: 3000 }));
+        return;
+      } catch (err) {
+        lastErr = err;
+      }
+    }
+    await page.waitForTimeout(1000);
+  }
+  throw lastErr || new Error("The Next button was not found on the step tooltip.");
+}
+
 /**
  * Walks a Whatfix flow until no more step tooltips appear.
  * stepActions: [{ title: /regex/, description, run: async (page, stepTitle) => {} }]
@@ -359,9 +381,7 @@ export async function runFlow(
         typeof action.description === "function" ? action.description(step.title) : action.description;
       log("PASSED", `Step ${stepsDone}: ${description}.`);
     } else if (step.hasNext) {
-      const nextBtn = page.locator('[data-wfx-step="next"]');
-      await highlight(page, nextBtn);
-      await nextBtn.click();
+      await clickNext(page, !!lastProgress);
       log("PASSED", `Step ${stepsDone}: clicked Next.`);
     } else {
       await describeStep(page, log, stepsDone, screenshotName);
@@ -372,9 +392,7 @@ export async function runFlow(
     let moved = await waitForStepChange(page, step, !!lastProgress, action ? 4000 : 10000);
     if (!moved && action && step.hasNext) {
       // The click was done but the flow still waits on its Next button
-      const nextBtn = page.locator('[data-wfx-step="next"]');
-      await highlight(page, nextBtn).catch(() => {});
-      await nextBtn.click({ force: true }).catch(() => {});
+      await clickNext(page, !!lastProgress).catch(() => {});
       log("PASSED", `Step ${stepsDone}: clicked Next.`);
       moved = await waitForStepChange(page, step, !!lastProgress);
     }
