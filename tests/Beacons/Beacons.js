@@ -48,7 +48,6 @@ async function readBeaconTip(page, beacon) {
   }
   await highlight(page, tip);
   const text = ((await tip.innerText().catch(() => "")) || "").replace(/\s+/g, " ").trim();
-  await beacon.click({ force: true }).catch(() => {}); // click the beacon too
   await page.waitForTimeout(1500);
   await page.mouse.move(5, 5); // move away so the next hover opens a fresh tip
   await page.waitForTimeout(1000);
