@@ -6,6 +6,16 @@ on:
     - cron: "30 4 3 * *"
   workflow_dispatch: # lets you run it by hand from the Actions tab
 
+permissions:
+  contents: read
+  pages: write # publish the report site to GitHub Pages
+  id-token: write
+
+# Only one Pages deploy at a time; a newer run waits for the current one
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -62,6 +72,12 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Package the report site for GitHub Pages
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/
+
       # Email is switched off while the workflow is being tested, so test runs
       # don't mail na_sc@whatfix.com. To turn it back on, change the next line
       # to: if: always()
@@ -84,3 +100,15 @@ jobs:
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           attachments: reports/dashboard.html
           ignore_cert: false
+
+  # Publishes the report site even when tests fail, so failures are visible too
+  publish-report:
+    needs: test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
