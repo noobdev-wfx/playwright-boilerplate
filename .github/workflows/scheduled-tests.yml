@@ -78,6 +78,20 @@ jobs:
         with:
           path: site/
 
+      - name: Count passed and failed tests
+        id: counts
+        if: always()
+        run: |
+          node -e '
+            const fs = require("fs");
+            let s = {};
+            try { s = JSON.parse(fs.readFileSync("reports/summary.json", "utf8")); } catch {}
+            const all = Object.values(s);
+            const passed = all.filter((t) => t.status === "PASSED").length;
+            fs.appendFileSync(process.env.GITHUB_OUTPUT,
+              `total=${all.length}\npassed=${passed}\nfailed=${all.length - passed}\n`);
+          '
+
       # Email is switched off while the workflow is being tested, so test runs
       # don't mail na_sc@whatfix.com. To turn it back on, change the next line
       # to: if: always()
@@ -92,13 +106,15 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           from: Abhigyan Nath <abhigyan.nath@whatfix.com>
           to: na_sc@whatfix.com
-          subject: "Coupa Whatfix tests: ${{ job.status }} (${{ github.run_number }})"
+          subject: "Coupa Whatfix tests: ${{ steps.counts.outputs.passed }} passed, ${{ steps.counts.outputs.failed }} failed (run ${{ github.run_number }})"
           body: |
-            The scheduled Coupa Whatfix test run finished with status: ${{ job.status }}.
+            The Coupa Whatfix test run finished: ${{ steps.counts.outputs.passed }} of ${{ steps.counts.outputs.total }} tests passed, ${{ steps.counts.outputs.failed }} failed.
 
-            Run details and downloadable reports:
+            Full report (opens in a browser):
+            https://noobdev-wfx.github.io/playwright-boilerplate/
+
+            Run details and logs:
             ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          attachments: reports/dashboard.html
           ignore_cert: false
 
   # Publishes the report site even when tests fail, so failures are visible too
