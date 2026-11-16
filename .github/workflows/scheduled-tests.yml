@@ -92,11 +92,11 @@ jobs:
               `total=${all.length}\npassed=${passed}\nfailed=${all.length - passed}\n`);
           '
 
-      # Email is switched off while the workflow is being tested, so test runs
-      # don't mail na_sc@whatfix.com. To turn it back on, change the next line
-      # to: if: always()
+      # Sends from abhigyan.nath@whatfix.com using the saved Gmail app password
+      # (MAIL_USERNAME / MAIL_PASSWORD secrets). To switch it off, change the
+      # next line to: if: false
       - name: Email the result
-        if: false
+        if: always()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
