@@ -94,9 +94,9 @@ jobs:
 
       # Sends from abhigyan.nath@whatfix.com using the saved Gmail app password
       # (MAIL_USERNAME / MAIL_PASSWORD secrets). To switch it off, change the
-      # next line to: if: false
+      # next line to: if: false. It skips cancelled runs, so stopping a run sends nothing.
       - name: Email the result
-        if: false # TEMP: email off for this run
+        if: ${{ !cancelled() }}
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
