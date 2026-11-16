@@ -96,7 +96,7 @@ jobs:
       # (MAIL_USERNAME / MAIL_PASSWORD secrets). To switch it off, change the
       # next line to: if: false
       - name: Email the result
-        if: always()
+        if: false # TEMP: email off for this run
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
